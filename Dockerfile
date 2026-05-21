@@ -1,10 +1,10 @@
-# Usa uma imagem oficial do Java 17 para rodar o projeto
-FROM maven:3.8.5-openjdk-17 AS build
+# Estágio de compilação com Maven e Java 17 da Amazon
+FROM maven:3.8.6-amazoncorretto-17 AS build
 COPY . .
 RUN mvn clean package -DskipTests
 
-# Executa o arquivo compilado do Spring Boot
-FROM openjdk:17-jdk-slim
+# Estágio de execução ultra leve
+FROM amazoncorretto:17-alpine
 COPY --from=build /target/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","app.jar"]
